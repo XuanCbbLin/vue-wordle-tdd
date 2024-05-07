@@ -1,11 +1,21 @@
 <script setup lang="ts">
+import { DEFEAT_MESSAGE, VICTORY_MESSAGE } from '@/utils/message'
+import { ref } from 'vue'
+
 defineProps<{
-  msg: string
+  wordOfTheDay: string
 }>()
+
+const guessInProgress = ref('')
+const guessSubmitted = ref('')
 </script>
 
 <template>
-  <p class="green">{{ msg }}</p>
+  <input type="text" v-model="guessInProgress" @keydown.enter="guessSubmitted = guessInProgress" />
+  <p
+    v-if="guessSubmitted.length > 0"
+    v-text="guessSubmitted === wordOfTheDay ? VICTORY_MESSAGE : DEFEAT_MESSAGE"
+  ></p>
 </template>
 
 <style scoped>
