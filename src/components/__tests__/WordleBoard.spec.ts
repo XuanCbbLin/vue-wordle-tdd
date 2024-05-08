@@ -1,5 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest'
-
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import WordleBoard from '../WordleBoard.vue'
 import { VICTORY_MESSAGE, DEFEAT_MESSAGE } from '@/utils/message'
@@ -33,5 +32,20 @@ describe('WordleBoard', () => {
   it('no end-of-game message appears if the user has not yet made a guess', async () => {
     expect(wrapper.text()).not.toContain(VICTORY_MESSAGE)
     expect(wrapper.text()).not.toContain(DEFEAT_MESSAGE)
+  })
+
+  it('If a word of the day provided does not have exactly 5 characters, a warning is emitted', async () => {
+    vi.spyOn(console, 'warn')
+
+    mount(WordleBoard, { props: { wordOfTheDay: 'FLY' } })
+
+    expect(console.warn).toHaveBeenCalled()
+
+    /* 也可以用 vi.fn() 來 mock console.warn */
+    // console.warn = vi.fn()
+
+    // mount(WordleBoard, { props: { wordOfTheDay: 'FLY' } })
+
+    // expect(console.warn).toHaveBeenCalled()
   })
 })
