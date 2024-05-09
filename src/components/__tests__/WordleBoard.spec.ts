@@ -37,22 +37,25 @@ describe('WordleBoard', () => {
   })
 
   describe('Rules for defining the word of the day', () => {
-    it('If a word of the day provided does not have exactly 5 characters, a warning is emitted', async () => {
-      const spy = vi.spyOn(console, 'warn')
+    it.each(['FLY', 'tests', 'QWERT'])(
+      "If '%s' provided does not have exactly 5 characters, a warning is emitted",
+      async (wordOfTheDay: string) => {
+        const spy = vi.spyOn(console, 'warn')
 
-      spy.mockImplementation(() => {})
+        spy.mockImplementation(() => {})
 
-      mount(WordleBoard, { props: { wordOfTheDay: 'FLY' } })
+        mount(WordleBoard, { props: { wordOfTheDay: wordOfTheDay } })
 
-      expect(console.warn).toHaveBeenCalled()
+        expect(console.warn).toHaveBeenCalled()
 
-      /* 也可以用 vi.fn() 來 mock console.warn */
-      // console.warn = vi.fn()
+        /* 也可以用 vi.fn() 來 mock console.warn */
+        // console.warn = vi.fn()
 
-      // mount(WordleBoard, { props: { wordOfTheDay: 'FLY' } })
+        // mount(WordleBoard, { props: { wordOfTheDay: 'FLY' } })
 
-      // expect(console.warn).toHaveBeenCalled()
-    })
+        // expect(console.warn).toHaveBeenCalled()
+      }
+    )
 
     it('no warning is emitted if the word of the day provided is a real uppercase English word with 5 characters', async () => {
       console.warn = vi.fn()
