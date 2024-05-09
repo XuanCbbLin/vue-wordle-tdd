@@ -17,61 +17,65 @@ describe('WordleBoard', () => {
     await guessInput.trigger('keydown.enter')
   }
 
-  it('a victory message appears when the user makes a guess that matches the word of the day', async () => {
-    await playerSubmitsGuess(wordOfTheDay)
+  describe('End of the game messages', () => {
+    it('a victory message appears when the user makes a guess that matches the word of the day', async () => {
+      await playerSubmitsGuess(wordOfTheDay)
 
-    expect(wrapper.text()).toContain(VICTORY_MESSAGE)
+      expect(wrapper.text()).toContain(VICTORY_MESSAGE)
+    })
+
+    it('a defeat message appears if the user makes a guess that is incorrect', async () => {
+      await playerSubmitsGuess('WRONG')
+
+      expect(wrapper.text()).toContain(DEFEAT_MESSAGE)
+    })
+
+    it('no end-of-game message appears if the user has not yet made a guess', async () => {
+      expect(wrapper.text()).not.toContain(VICTORY_MESSAGE)
+      expect(wrapper.text()).not.toContain(DEFEAT_MESSAGE)
+    })
   })
 
-  it('a defeat message appears if the user makes a guess that is incorrect', async () => {
-    await playerSubmitsGuess('WRONG')
+  describe('Rules for defining the word of the day', () => {
+    it('If a word of the day provided does not have exactly 5 characters, a warning is emitted', async () => {
+      const spy = vi.spyOn(console, 'warn')
 
-    expect(wrapper.text()).toContain(DEFEAT_MESSAGE)
-  })
+      spy.mockImplementation(() => {})
 
-  it('no end-of-game message appears if the user has not yet made a guess', async () => {
-    expect(wrapper.text()).not.toContain(VICTORY_MESSAGE)
-    expect(wrapper.text()).not.toContain(DEFEAT_MESSAGE)
-  })
+      mount(WordleBoard, { props: { wordOfTheDay: 'FLY' } })
 
-  it('If a word of the day provided does not have exactly 5 characters, a warning is emitted', async () => {
-    const spy = vi.spyOn(console, 'warn')
+      expect(console.warn).toHaveBeenCalled()
 
-    spy.mockImplementation(() => {})
+      /* 也可以用 vi.fn() 來 mock console.warn */
+      // console.warn = vi.fn()
 
-    mount(WordleBoard, { props: { wordOfTheDay: 'FLY' } })
+      // mount(WordleBoard, { props: { wordOfTheDay: 'FLY' } })
 
-    expect(console.warn).toHaveBeenCalled()
+      // expect(console.warn).toHaveBeenCalled()
+    })
 
-    /* 也可以用 vi.fn() 來 mock console.warn */
-    // console.warn = vi.fn()
+    it('no warning is emitted if the word of the day provided is a real uppercase English word with 5 characters', async () => {
+      console.warn = vi.fn()
 
-    // mount(WordleBoard, { props: { wordOfTheDay: 'FLY' } })
+      mount(WordleBoard, { props: { wordOfTheDay: 'tests' } })
 
-    // expect(console.warn).toHaveBeenCalled()
-  })
+      expect(console.warn).toHaveBeenCalled()
+    })
 
-  it('no warning is emitted if the word of the day provided is a real uppercase English word with 5 characters', async () => {
-    console.warn = vi.fn()
+    it('if the word of the day is not a real English word, a warning is emitted', async () => {
+      console.warn = vi.fn()
 
-    mount(WordleBoard, { props: { wordOfTheDay: 'tests' } })
+      mount(WordleBoard, { props: { wordOfTheDay: 'QWERT' } })
 
-    expect(console.warn).toHaveBeenCalled()
-  })
+      expect(console.warn).toHaveBeenCalled()
+    })
 
-  it('if the word of the day is not a real English word, a warning is emitted', async () => {
-    console.warn = vi.fn()
+    it('no warning is emitted if the word of the day provided is a real uppercase English word with 5 characters', async () => {
+      console.warn = vi.fn()
 
-    mount(WordleBoard, { props: { wordOfTheDay: 'QWERT' } })
+      mount(WordleBoard, { props: { wordOfTheDay: 'TESTS' } })
 
-    expect(console.warn).toHaveBeenCalled()
-  })
-
-  it('no warning is emitted if the word of the day provided is a real uppercase English word with 5 characters', async () => {
-    console.warn = vi.fn()
-
-    mount(WordleBoard, { props: { wordOfTheDay: 'TESTS' } })
-
-    expect(console.warn).not.toHaveBeenCalled()
+      expect(console.warn).not.toHaveBeenCalled()
+    })
   })
 })
