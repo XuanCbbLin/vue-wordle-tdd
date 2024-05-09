@@ -37,14 +37,18 @@ describe('WordleBoard', () => {
   })
 
   describe('Rules for defining the word of the day', () => {
-    it.each(['FLY', 'tests', 'QWERT'])(
-      "If '%s' provided does not have exactly 5 characters, a warning is emitted",
-      async (wordOfTheDay: string) => {
+    it.each([
+      { wordOfTheDay: 'FLY', reason: 'word-of-the-day must have 5 characters' },
+      { wordOfTheDay: 'tests', reason: 'word-of-the-day must be all in uppercase' },
+      { wordOfTheDay: 'QWERT', reason: 'word-of-the-day must be a valid English word' }
+    ])(
+      'Since $reason: $wordOfTheDay is invalid, therefore a warning must be emitted',
+      async ({ wordOfTheDay }) => {
         const spy = vi.spyOn(console, 'warn')
 
         spy.mockImplementation(() => {})
 
-        mount(WordleBoard, { props: { wordOfTheDay: wordOfTheDay } })
+        mount(WordleBoard, { props: { wordOfTheDay } })
 
         expect(console.warn).toHaveBeenCalled()
 
