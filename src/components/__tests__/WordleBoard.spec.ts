@@ -69,7 +69,7 @@ describe('WordleBoard', () => {
   })
 
   describe('Player input', () => {
-    it(`player guesses are limited to 5 letters`, async () => {
+    it('player guesses are limited to 5 letters', async () => {
       await playerSubmitsGuess(wordOfTheDay + 'EXTRA')
 
       expect(wrapper.text()).toContain(VICTORY_MESSAGE)
