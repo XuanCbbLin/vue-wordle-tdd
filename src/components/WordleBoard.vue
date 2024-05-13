@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { DEFEAT_MESSAGE, VICTORY_MESSAGE, WORD_SIZE } from '@/utils/message'
 import englishWords from '@/data/englishWordsWith5Letters.json'
-import { computed, ref } from 'vue'
+import { computed, ref, triggerRef } from 'vue'
 
 defineProps({
   wordOfTheDay: {
@@ -10,25 +10,52 @@ defineProps({
   }
 })
 
-const guessInProgress = ref('')
+// 修改前 vue 3.3.X
+// const guessInProgress = ref<string | null>(null)
+// const guessSubmitted = ref('')
+
+// const formattedGuessesInProgress = computed<string>({
+//   get() {
+//     return guessInProgress.value ?? ''
+//   },
+//   set(rawValue: string) {
+//     guessInProgress.value = null
+
+//     guessInProgress.value = rawValue
+//       .slice(0, WORD_SIZE)
+//       .toLocaleUpperCase()
+//       .replace(/[^A-Z]+/gi, '')
+//   }
+// })
+
+// function onSubmit() {
+//   if (!englishWords.includes(formattedGuessesInProgress.value)) return
+
+//   guessSubmitted.value = formattedGuessesInProgress.value
+// }
+
+// 修改後 vue 3.4.21
+const guessInProgress = ref<string | null>(null)
 const guessSubmitted = ref('')
 
-const formattedGuessesInProgress = computed({
+const formattedGuessesInProgress = computed<string>({
   get() {
-    return guessInProgress.value
+    return guessInProgress.value ?? ''
   },
   set(rawValue: string) {
     guessInProgress.value = rawValue
       .slice(0, WORD_SIZE)
       .toLocaleUpperCase()
       .replace(/[^A-Z]+/gi, '')
+
+    triggerRef(formattedGuessesInProgress)
   }
 })
 
 function onSubmit() {
-  if (!englishWords.includes(guessInProgress.value)) return
+  if (!englishWords.includes(formattedGuessesInProgress.value)) return
 
-  guessSubmitted.value = guessInProgress.value
+  guessSubmitted.value = formattedGuessesInProgress.value
 }
 </script>
 
