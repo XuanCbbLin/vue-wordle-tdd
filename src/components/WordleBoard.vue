@@ -19,34 +19,35 @@ function handleSubmit(guess: string) {
 </script>
 
 <template>
-  <GuessInput @guess-submitted="handleSubmit" />
-  <p
-    v-if="guessSubmitted.length > 0"
-    v-text="guessSubmitted === wordOfTheDay ? VICTORY_MESSAGE : DEFEAT_MESSAGE"
-  ></p>
+  <main>
+    <GuessInput @guess-submitted="handleSubmit" />
+    <p class="end-of-game-message" v-if="guessSubmitted.length > 0">
+      {{ guessSubmitted === wordOfTheDay ? VICTORY_MESSAGE : DEFEAT_MESSAGE }}
+    </p>
+  </main>
 </template>
 
 <style scoped>
-h1 {
-  font-weight: 500;
-  font-size: 2.6rem;
-  position: relative;
-  top: -10px;
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 3rem;
 }
-
-h3 {
-  font-size: 1.2rem;
-}
-
-.greetings h1,
-.greetings h3 {
+.end-of-game-message {
+  font-size: 3rem;
+  animation: end-of-game-message-animation 700ms forwards;
+  white-space: nowrap;
   text-align: center;
 }
-
-@media (min-width: 1024px) {
-  .greetings h1,
-  .greetings h3 {
-    text-align: left;
+@keyframes end-of-game-message-animation {
+  0% {
+    opacity: 0;
+    transform: rotateZ(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(2rem);
   }
 }
 </style>
