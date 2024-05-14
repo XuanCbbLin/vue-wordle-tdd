@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { DEFEAT_MESSAGE, VICTORY_MESSAGE, WORD_SIZE } from '@/utils/message'
+import { DEFEAT_MESSAGE, VICTORY_MESSAGE } from '@/utils/message'
 import englishWords from '@/data/englishWordsWith5Letters.json'
-import { computed, ref, triggerRef } from 'vue'
+import { ref } from 'vue'
+import GuessInput from './GuessInput.vue'
 
 defineProps({
   wordOfTheDay: {
@@ -10,62 +11,15 @@ defineProps({
   }
 })
 
-// 修改前 vue 3.3.X
-// const guessInProgress = ref<string | null>(null)
-// const guessSubmitted = ref('')
-
-// const formattedGuessesInProgress = computed<string>({
-//   get() {
-//     return guessInProgress.value ?? ''
-//   },
-//   set(rawValue: string) {
-//     guessInProgress.value = null
-
-//     guessInProgress.value = rawValue
-//       .slice(0, WORD_SIZE)
-//       .toLocaleUpperCase()
-//       .replace(/[^A-Z]+/gi, '')
-//   }
-// })
-
-// function onSubmit() {
-//   if (!englishWords.includes(formattedGuessesInProgress.value)) return
-
-//   guessSubmitted.value = formattedGuessesInProgress.value
-// }
-
-// 修改後 vue 3.4.21
-const guessInProgress = ref<string | null>(null)
 const guessSubmitted = ref('')
 
-const formattedGuessesInProgress = computed<string>({
-  get() {
-    return guessInProgress.value ?? ''
-  },
-  set(rawValue: string) {
-    guessInProgress.value = rawValue
-      .slice(0, WORD_SIZE)
-      .toLocaleUpperCase()
-      .replace(/[^A-Z]+/gi, '')
-
-    triggerRef(formattedGuessesInProgress)
-  }
-})
-
-function onSubmit() {
-  if (!englishWords.includes(formattedGuessesInProgress.value)) return
-
-  guessSubmitted.value = formattedGuessesInProgress.value
+function handleSubmit(guess: string) {
+  guessSubmitted.value = guess
 }
 </script>
 
 <template>
-  <input
-    type="text"
-    v-model="formattedGuessesInProgress"
-    @keydown.enter="onSubmit"
-    :maxlength="WORD_SIZE"
-  />
+  <GuessInput @guess-submitted="handleSubmit" />
   <p
     v-if="guessSubmitted.length > 0"
     v-text="guessSubmitted === wordOfTheDay ? VICTORY_MESSAGE : DEFEAT_MESSAGE"
