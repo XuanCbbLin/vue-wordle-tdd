@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi, should } from 'vitest'
 import { mount } from '@vue/test-utils'
 import WordleBoard from '../WordleBoard.vue'
-import { VICTORY_MESSAGE, DEFEAT_MESSAGE, WORD_SIZE } from '@/utils/message'
+import { VICTORY_MESSAGE, DEFEAT_MESSAGE, WORD_SIZE, MAX_GUESSES_COUNT } from '@/utils/message'
 
 describe('WordleBoard', () => {
   const wordOfTheDay = 'TESTS'
@@ -50,11 +50,11 @@ describe('WordleBoard', () => {
         shouldSeeDefeatMessage: false
       },
       {
-        numberOfGuesses: 6,
+        numberOfGuesses: MAX_GUESSES_COUNT,
         shouldSeeDefeatMessage: true
       }
     ])(
-      'a defeat message should appear if the player makes incorrect guesses 6 times in a row',
+      `a defeat message should appear if the player makes incorrect guesses ${MAX_GUESSES_COUNT} times in a row`,
       ({ numberOfGuesses, shouldSeeDefeatMessage }) => {
         it(`therefore for ${numberOfGuesses} guess(es) a defeat message should ${shouldSeeDefeatMessage ? '' : 'not'} appear`, async () => {
           for (let i = 0; i < numberOfGuesses; i++) {
