@@ -7,22 +7,26 @@ import GuessInput from './GuessInput.vue'
 defineProps({
   wordOfTheDay: {
     type: String,
+    required: true,
     validator: (wordGiven: string) => englishWords.includes(wordGiven)
   }
 })
 
-const guessSubmitted = ref('')
+const guessesSubmitted = ref<string[]>([])
 
 function handleSubmit(guess: string) {
-  guessSubmitted.value = guess
+  guessesSubmitted.value.push(guess)
 }
 </script>
 
 <template>
   <main>
     <GuessInput @guess-submitted="handleSubmit" />
-    <p class="end-of-game-message" v-if="guessSubmitted.length > 0">
-      {{ guessSubmitted === wordOfTheDay ? VICTORY_MESSAGE : DEFEAT_MESSAGE }}
+    <p
+      class="end-of-game-message"
+      v-if="guessesSubmitted.length === 6 || guessesSubmitted.includes(wordOfTheDay)"
+    >
+      {{ guessesSubmitted.includes(wordOfTheDay) ? VICTORY_MESSAGE : DEFEAT_MESSAGE }}
     </p>
   </main>
 </template>
