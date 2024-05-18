@@ -3,6 +3,7 @@ import { DEFEAT_MESSAGE, MAX_GUESSES_COUNT, VICTORY_MESSAGE } from '@/utils/mess
 import englishWords from '@/data/englishWordsWith5Letters.json'
 import { ref, computed } from 'vue'
 import GuessInput from './GuessInput.vue'
+import GuessView from './GuessView.vue'
 
 const props = defineProps({
   wordOfTheDay: {
@@ -28,7 +29,7 @@ function handleSubmit(guess: string) {
   <main>
     <ul>
       <li v-for="(guess, index) in guessesSubmitted" :key="`${index}-${guess}`">
-        {{ guess }}
+        <GuessView :guess="guess" />
       </li>
     </ul>
 
@@ -52,6 +53,17 @@ main {
   white-space: nowrap;
   text-align: center;
 }
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 0.25rem;
+}
+
 @keyframes end-of-game-message-animation {
   0% {
     opacity: 0;

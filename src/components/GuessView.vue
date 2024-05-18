@@ -18,27 +18,10 @@ defineProps<{ guess: string }>()
 </template>
 
 <style scoped>
-h1 {
-  font-weight: 500;
-  font-size: 2.6rem;
-  position: relative;
-  top: -10px;
-}
-
-h3 {
-  font-size: 1.2rem;
-}
-
-.greetings h1,
-.greetings h3 {
-  text-align: center;
-}
-
-@media (min-width: 1024px) {
-  .greetings h1,
-  .greetings h3 {
-    text-align: left;
-  }
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .word {
@@ -47,6 +30,7 @@ h3 {
   display: flex;
   gap: 0.25rem;
 }
+
 .letter {
   background-color: white;
   border: 1px solid hsl(0, 0%, 70%);
@@ -58,9 +42,11 @@ h3 {
   font-size: 2rem;
   font-weight: bolder;
 }
+
 li:not([data-letter=' ']) {
   animation: pop 100ms;
 }
+
 @keyframes pop {
   0% {
     transform: scale(1);
