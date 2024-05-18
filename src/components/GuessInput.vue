@@ -51,6 +51,8 @@ function onSubmit() {
   if (!englishWords.includes(formattedGuessesInProgress.value)) return
 
   emit('guess-submitted', formattedGuessesInProgress.value)
+
+  guessInProgress.value = null
 }
 </script>
 
