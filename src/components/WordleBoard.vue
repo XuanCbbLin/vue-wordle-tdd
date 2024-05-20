@@ -20,6 +20,14 @@ const isGameOver = computed(
     guessesSubmitted.value.includes(props.wordOfTheDay)
 )
 
+const countOfEmptyGuesses = computed(() => {
+  const guessesRemaining = MAX_GUESSES_COUNT - guessesSubmitted.value.length
+
+  console.log('guessesRemaining', guessesRemaining)
+
+  return isGameOver.value ? guessesRemaining : guessesRemaining - 1
+})
+
 function handleSubmit(guess: string) {
   guessesSubmitted.value.push(guess)
 }
@@ -34,6 +42,10 @@ function handleSubmit(guess: string) {
 
       <li>
         <guess-input :disabled="isGameOver" @guess-submitted="handleSubmit" />
+      </li>
+
+      <li v-for="i in countOfEmptyGuesses" :key="`remaining-guess-${i}`">
+        <guess-view guess="" />
       </li>
     </ul>
 
