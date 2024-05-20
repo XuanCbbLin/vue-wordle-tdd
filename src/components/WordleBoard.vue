@@ -31,9 +31,12 @@ function handleSubmit(guess: string) {
       <li v-for="(guess, index) in guessesSubmitted" :key="`${index}-${guess}`">
         <GuessView :guess="guess" />
       </li>
+
+      <li>
+        <guess-input :disabled="isGameOver" @guess-submitted="handleSubmit" />
+      </li>
     </ul>
 
-    <GuessInput @guess-submitted="handleSubmit" />
     <p class="end-of-game-message" v-if="isGameOver">
       {{ guessesSubmitted.includes(wordOfTheDay) ? VICTORY_MESSAGE : DEFEAT_MESSAGE }}
     </p>
