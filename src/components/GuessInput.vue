@@ -35,6 +35,7 @@ const emit = defineEmits<{
 
 // 修改後 vue 3.4.21
 const guessInProgress = ref<string | null>(null)
+const hasFailedValidation = ref<boolean>(false)
 
 const formattedGuessesInProgress = computed<string>({
   get() {
@@ -51,7 +52,12 @@ const formattedGuessesInProgress = computed<string>({
 })
 
 function onSubmit() {
-  if (!englishWords.includes(formattedGuessesInProgress.value)) return
+  if (!englishWords.includes(formattedGuessesInProgress.value)) {
+    hasFailedValidation.value = true
+    setTimeout(() => (hasFailedValidation.value = false), 500)
+
+    return
+  }
 
   emit('guess-submitted', formattedGuessesInProgress.value)
 
@@ -60,7 +66,11 @@ function onSubmit() {
 </script>
 
 <template>
-  <GuessView :guess="formattedGuessesInProgress" v-if="!disabled" />
+  <GuessView
+    :guess="formattedGuessesInProgress"
+    :class="{ shake: hasFailedValidation }"
+    v-if="!disabled"
+  />
 
   <input
     type="text"
@@ -78,5 +88,25 @@ function onSubmit() {
 input {
   position: absolute;
   opacity: 0;
+}
+
+.shake {
+  animation: shake;
+  animation-duration: 100ms;
+  animation-iteration-count: 2;
+}
+@keyframes shake {
+  0% {
+    transform: translateX(-2%);
+  }
+  25% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(2%);
+  }
+  75% {
+    transform: translateX(0);
+  }
 }
 </style>
