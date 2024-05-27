@@ -23,8 +23,6 @@ const isGameOver = computed(
 const countOfEmptyGuesses = computed(() => {
   const guessesRemaining = MAX_GUESSES_COUNT - guessesSubmitted.value.length
 
-  console.log('guessesRemaining', guessesRemaining)
-
   return isGameOver.value ? guessesRemaining : guessesRemaining - 1
 })
 
