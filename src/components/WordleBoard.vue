@@ -35,7 +35,7 @@ function handleSubmit(guess: string) {
   <main>
     <ul>
       <li v-for="(guess, index) in guessesSubmitted" :key="`${index}-${guess}`">
-        <GuessView :guess="guess" should-flip />
+        <GuessView :guess="guess" :answer="wordOfTheDay" />
       </li>
 
       <li>
